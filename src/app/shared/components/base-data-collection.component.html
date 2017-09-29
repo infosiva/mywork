@@ -1,0 +1,53 @@
+<div>
+<context-menu></context-menu>
+<router-outlet></router-outlet>
+ <div> 
+    <table id="spreadsheet" class="table-bordered" style="font-size: 12px;height: auto;width: 100%">
+    <thead>        
+        <tr data-toggle="collapse">
+        <th class="" style="background-color: #F2E85E;cursor: pointer;height:25px;width:auto;border-width: 2px" [colSpan]="columnHeader.colSpan"
+            [rowSpan] = "columnHeader.rowSpan"
+            *ngFor="let columnHeader of model.header" (click)="markAsHeaderRowColumnsSelected(startingColumnIndex,endingColumnIndex,columnHeader.colSpan)">
+            <b>{{columnHeader.DISPLAYTEXT}}&nbsp;</b>
+        </th>            
+        </tr>
+    </thead>
+    <tbody>
+         <tr *ngFor="let row of model.rows;let rowIndex=index; let last=last" 
+            class="active" style="height:20px"> {{ domLoaded(last) }}
+          <td *ngFor="let col of row.columns;let colIndex=index" [colSpan]="col.colSpan" style="height:25px">
+            <template #tolTemplate> <div [innerHtml]="getFormattedHTML(cell)"></div></template>
+              <div class="input-group" style="width:100%;height:100%">                    
+                <label
+                    style="display: block;width: 100%;height:100%;min-height: 100%"
+                    data-id="{{col.rowIndex}}-{{col.columnIndex}}"                    
+                    #cell
+                    [attr.cellType] = "col.cellType"
+                    [attr.data-isHeader] = "col.isHeader"
+                    [attr.data-columnIndex] = "col.columnIndex"
+                    [attr.data-colSpan] = "col.span"
+                    [attr.data-rowIndex] = "col.rowIndex"
+                    [attr.data-uniqueId]="col.uniqueId"
+                    [style.background-color]= "setBackgroundColor(col.isHeader,false,cell)" 
+                    [style.font-weight]="setFontWeight(col.isHeader)" 
+                    (mousedown) = "onCellMouseDown(cell,$event)"      
+                    (mouseup) = "onCellMouseUp(cell,$event)"      
+                    (mouseover)="onCellMouseOver(cell,$event)"   
+                    (click) = "onCellClick(cell,$event)"                                                         
+                    (keyup) ="navigate(cell, $event)"
+                    (OnValidationApply) = "onValidationApply($event,col.displayText)">
+                    {{applyDimensions(cell,col.displayText,col.isHeader,col.columnIndex,col.rowIndex)}}       
+                </label>
+                <span class="input-group-addon"
+                    *ngIf="cell.showToolTip(cell)"
+                    [tooltip]="tolTemplate"                     
+                    [isDisabled]="!cell.showToolTip(cell)">                    
+                    <i #icon  [ngClass]="getValidationClass(cell, icon)" style="color: green" ></i>
+                </span>
+              </div>                                       
+        </td>
+        </tr>
+    </tbody>
+    </table>
+<div>
+</div>

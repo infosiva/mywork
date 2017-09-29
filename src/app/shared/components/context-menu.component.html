@@ -1,0 +1,129 @@
+<div bsModal #lgModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" (onShow) = "onModalOpen($event)">
+	 <div class="modal-dialog modal-md">
+	 <div class="modal-content">
+	   <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" (click)="closeModal(lgModal)"
+              aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Data Validation...</h4>
+        </div>
+	  <div class="modal-body">	  
+	    	<div class="panel  panel-primary">
+						<div class="row" *ngIf="isAllowVisible">
+							<div class="panel-body">
+								 	<label class="col-xs-4 control-label">Allow:</label>
+							        <div class="col-xs-4">
+							            <select class="form-control" #allow name="allow" (change)="fieldChange(allow,'allow')">
+							            	<option value="">--Select--</option>
+							                <option value="FT">Free Text</option>
+							                <option value="WN">Whole Number</option>
+							                <option value="DE">Decimal</option>
+							                <option value="DT">Date</option>
+							                <option value="CL">Custom List</option>
+							            </select>
+							        </div>
+							        <div class="col-xs-4 control-label">
+							        	<input name="Allow blank" type=checkbox  checked #AllowBlank (change)="fieldChange('Allow blank','ignore')">
+							        	Allow blank
+							        </div>					  
+							</div>
+						</div>
+						<div class="row" *ngIf="isDefaultTextVisible">
+							<div class="panel-body">
+								 <label class="col-xs-4 control-label">Default value:</label>
+							        <div class="col-xs-4">
+							            <input type="text" name="Default value">
+							        </div>					  
+							</div>
+						</div>
+						<div class="row" *ngIf="isDataVisible">
+							<div class="panel-body">
+								 <label class="col-xs-4 control-label">Data:</label>
+							        <div class="col-xs-4">
+							            <select class="form-control" #data name="range" (change)="fieldChange(data,'data')">
+							            	<option value="">--Select--</option>
+							                <option value="BE">between</option>
+							                <option value="NB">not between</option>
+							                <option value="ET">equal to</option>
+							                <option value="NE">not equal to</option>
+							                <option value="GT">greater than</option>
+							                <option value="LT">less than</option>
+							                <option value="GL">greater than or equal to</option>
+							                <option value="LE">less than or equal to</option>
+							            </select>
+							        </div>					  
+							</div>
+						</div>
+						<div class="row" *ngIf="isMinVisible">
+							<div class="panel-body">						
+								 <label class="col-xs-4 control-label">Minimum:</label>
+						        <div class="col-xs-4">
+						            <input type="number" #minNumber (change)="fieldChange(minNumber,'min',true)" name="min" placeholder="number only"/>
+						        </div>					  
+							</div>
+						</div>
+						<div class="row" *ngIf="isMaxVisible">
+							<div class="panel-body">						
+								 <label class="col-xs-4 control-label">Maximum:</label>
+						        <div class="col-xs-4">
+						            <input type="number" #maxNumber (change)="fieldChange(maxNumber,'max',true)" name="max" placeholder="number only" />
+						        </div>					  
+							</div>
+						</div>
+						<div class="row" *ngIf="isNumbericVisible">
+							<div class="panel-body">
+								 <label class="col-xs-4 control-label">Value:</label>
+							        <div class="col-xs-4">
+							            <input type="number" name="Number value">
+							        </div>					  
+							</div>
+						</div>
+						<div *ngIf="isCustomListVisible">
+							<div class="row">
+								<div class="panel-body">
+									 <label class="col-xs-4 control-label"></label>
+								        <div class="col-xs-4">
+								            <input class="form-control" type="text" id="txtItem" #txtItem name="" placeholder ="any text...">
+								        </div>	
+								        <div class="col-xs-4">
+								            <button class="btn btn-primary" [disabled]="txtItem.value.length<0" (click)="addCustomList(txtItem)">Add Item</button>
+								        </div>							        
+								</div>
+							</div>
+							<div class="row">
+								<div class="panel-body">
+									<div class="col-xs-4"></div>								    
+									<div class="col-xs-6">										
+											<a href="#" class="list-group-item active" *ngIf="customLists.length > 0"> Custom List </a>
+											<p *ngFor="let item of customLists">
+												<a class="list-group-item list-group-item-action" (click)="removeItem(item)">
+													  			<span> {{item | uppercase }} <i class="fa fa-times" (click)="removeItem(item)"></i></span>	
+												</a>
+											</p>
+									</div>			
+								</div>
+							</div>
+						</div>
+	    	</div>
+	  	<div class="modal-footer" style="margin-top:0;">
+      		<div style="float:right">
+			<button type="button" class="btn btn-danger" data-dismiss="modal" (click)="lgModal.hide()">Cancel <i class="fa fa-ban"></i> </button>
+     	    <button type="button" class="btn btn-success" data-loading-text="Submitting..." (click)="Apply(lgModal)">Apply <i class="fa fa-chevron-circle-right"></i></button>
+     	   </div>
+		</div>
+
+	  </div>  
+	</div>
+	</div>
+</div>
+<div class="container" *ngIf="isVisible" [ngStyle]="locationCss">
+	<div class="context-menu">
+		<ul class="context-menu__items">
+			<li (click)="menuClick(link)" class="context-menu__item" *ngFor="let link of contextMenuOptions">
+			  		<a class="context-menu__link" data-action="View">
+			  			<i [ngClass]="link.icon"></i> 
+			  			{{link.DisplayText}}
+			  	</a>
+			</li>
+		</ul>
+	</div>
+</div>
